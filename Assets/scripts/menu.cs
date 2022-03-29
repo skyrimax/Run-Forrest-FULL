@@ -119,7 +119,7 @@ public class menu : MonoBehaviour {
         }
 
         return dat.Split(',');
-        }
+    }
 
     void CheckForMenuFolder()
     {
@@ -367,8 +367,9 @@ public class menu : MonoBehaviour {
         int mult = (Application.isEditor) ? 2 : 1;
         CheckForLvlDirectory();
         StreamReader sR = new StreamReader(Directory.GetFiles(ctrl.lvlsPath)[index * mult]);
-        return sR.ReadToEnd();
+        string lvlData = sR.ReadToEnd();
         sR.Close();
+        return lvlData;
     }
 
     // 
@@ -377,8 +378,9 @@ public class menu : MonoBehaviour {
         int mult = (Application.isEditor) ? 2 : 1;
         CheckForLvlDirectory();
         StreamReader sR = new StreamReader(Path.Combine(ctrl.lvlsPath,name+".fcour"));
-        return sR.ReadToEnd();
+        string lvlData = sR.ReadToEnd();
         sR.Close();
+        return lvlData;
     }
 
     // 
@@ -387,8 +389,9 @@ public class menu : MonoBehaviour {
         int mult = (Application.isEditor) ? 2 : 1;
         CheckForForrestDirectory();
         StreamReader sR = new StreamReader(Directory.GetFiles(ctrl.forrestPath)[index * mult]);
-        return sR.ReadToEnd();
+        string forrData = sR.ReadToEnd();
         sR.Close();
+        return forrData;
     }
 
     // 

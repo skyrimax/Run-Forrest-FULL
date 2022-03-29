@@ -34,7 +34,7 @@ namespace NeuralNet
         public double this[int row, int col]
         {
             get { return _data[row, col]; }
-            private set { _data[row, col] = value; }
+            set { _data[row, col] = value; }
         }
 
         public static Matrix operator-(Matrix matrix)

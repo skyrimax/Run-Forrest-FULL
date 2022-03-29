@@ -9,24 +9,25 @@ public class ForrestCTRL : MonoBehaviour {
     ctrl C;
     Rigidbody rb;
     Collider col;
-    public NN nn = new NN(5,4);
+    public NN nn;
     public string myName;
-    public float movement;
-    public float fitness;
-    float[] ini;
+    public double movement;
+    public double fitness;
+    double[] ini;
     public bool ended, stLap;
     public Vector2 lap;
-    public float[] inp;
-    public string brain;
+    public double[] inp;
+    //public string brain;
 
     bool menu;
 
     // Use this for initialization
-    void Start() {
+    void Awake() {
         menu = SceneManager.GetActiveScene().name == "menu";
 
         if (!menu)
         {
+            nn = new NN(5,new int[] { 4, 4, 4, 4 });
             // Grab reference to the controller script
             C = Camera.main.GetComponent<ctrl>();
 
@@ -35,7 +36,8 @@ public class ForrestCTRL : MonoBehaviour {
         }
         else
         {
-            nn.IniWeights(new float[] { 3.472079f, 1.762525f, -2.266208f, 0.8920379f, -3.915989f, -1.762377f, -2.844904f, 3.381477f, 1.12464f, -3.086241f, 3.320154f, 0.1941123f, 0.1791953f, -3.122393f, 0.8971314f, 0.1158746f, 3.512217f, 1.440832f, 3.3429f, -3.377463f, -2.171291f, 1.523072f, -2.242229f, -2.650826f, 3.01321f, -3.341551f, 3.746894f, -1.755286f, -0.3875917f });
+            nn = new NN(5, new int[] { 4 });
+            nn.IniWeights(new double[] { 3.472079f, 1.762525f, -2.266208f, 0.8920379f, -3.915989f, -1.762377f, -2.844904f, 3.381477f, 1.12464f, -3.086241f, 3.320154f, 0.1941123f, 0.1791953f, -3.122393f, 0.8971314f, 0.1158746f, 3.512217f, 1.440832f, 3.3429f, -3.377463f, -2.171291f, 1.523072f, -2.242229f, -2.650826f, 3.01321f, -3.341551f, 3.746894f, -1.755286f, -0.3875917f });
         }
 
         // Grab ref to ridgid body component
@@ -58,10 +60,10 @@ public class ForrestCTRL : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
-        brain = nn.ReadBrain();
+        //brain = nn.ReadBrain();
 
         // Rotate the charater based on Horizonal Input & later NN Output
-        transform.rotation = Quaternion.Euler(transform.eulerAngles + Vector3.up * movement * 2.5f);
+        transform.rotation = Quaternion.Euler(transform.eulerAngles + Vector3.up * (float)movement * 2.5f);
 
         // If attempt has ended
         if (!ended)
@@ -89,7 +91,7 @@ public class ForrestCTRL : MonoBehaviour {
         };
 
         // Use this to collect all feeler distances, then well pass them through our NN for an output
-        inp = new float[feeler.Length];
+        inp = new double[feeler.Length];
 
         // Loop through all feelers
         for (int i = 0; i < feeler.Length; i++)
@@ -136,9 +138,9 @@ public class ForrestCTRL : MonoBehaviour {
     /// </summary>
     /// <param name="inps"></param>
     /// <returns></returns>
-    float inp2fit(float[] inps)
+    double inp2fit(double[] inps)
     {
-        float ret = 0;
+        double ret = 0;
 
         // 
         for (int i = 0; i < inps.Length; i++)
@@ -230,7 +232,7 @@ public class ForrestCTRL : MonoBehaviour {
     /// Set the Genetic Code for the attempt
     /// </summary>
     /// <param name="i"></param>
-    public void SetBrain(float[] i)
+    public void SetBrain(double[] i)
     {
         ini = i;
         nn.IniWeights(ini);
@@ -240,12 +242,29 @@ public class ForrestCTRL : MonoBehaviour {
     /// Set the Genetic Code for the attempt with name
     /// </summary>
     /// <param name="i"></param>
-    public void SetBrain(float[] i, string n)
+    public void SetBrain(double[] i, string n)
     {
         ini = i;
         nn.IniWeights(ini);
         nn.SetName(n);
-        myName = nn.name;
+        myName = nn.Name;
         gameObject.name = myName;
+    }
+
+    public void SetBrain(int nbInputs, int[] nbNodesHiddenLayers, double[] i)
+    {
+        nn = new NN(nbInputs, nbNodesHiddenLayers);
+
+        nn.IniWeights(i);
+    }
+
+    public void SetBrain(int nbInputs, int[] nbNodesHiddenLayers, double[] i, string n)
+    {
+        nn = new NN(nbInputs, nbNodesHiddenLayers);
+
+        nn.IniWeights(i);
+        nn.SetName(n);
+        myName = n;
+        gameObject.name = n;
     }
 }
